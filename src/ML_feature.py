@@ -1,5 +1,5 @@
 import numpy as np
-from bounding import *
+import tsp_utility
 from data_gen import *
 from tsp import *
 
@@ -9,9 +9,9 @@ def extract_branch_features(graph, visited, current_cost):
     unvisited = {i for i in range(n) if i not in visited}
 
     # MST cost of remaining nodes
-    mst_cost = prim_mst(graph, unvisited)
-    mst_cost_visited = prim_mst(graph, visited)
-    mst_cost_all = prim_mst(graph, range(n))
+    mst_cost = tsp_utility.prim_mst(graph, unvisited)
+    mst_cost_visited = tsp_utility.prim_mst(graph, visited)
+    mst_cost_all = tsp_utility.prim_mst(graph, range(n))
     
     # Find two smallest edges connecting visited and unvisited nodes
     start_edges = []

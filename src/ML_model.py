@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 
-with open('data/data5-10.pkl', 'rb') as f:
+with open('data/data.pkl', 'rb') as f:
     X, Y1, Y2 = pickle.load(f)
 
 # print(sum(Y1_train))

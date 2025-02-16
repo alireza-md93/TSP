@@ -4,7 +4,7 @@ from tqdm import tqdm
 import sys
 import concurrent.futures
 import multiprocessing.queues
-from bounding import *
+from tsp_utility import *
 from data_gen import *
 from tsp import *
 from ML_feature import *
@@ -55,7 +55,7 @@ def dummy(n):
     return n
     
 if __name__ == "__main__":
-    genrate_data_and_save(len_graph=range(5,11), n_branching=10, N=1000, parallel=32, filename='data/data5-10.pkl')
+    genrate_data_and_save(len_graph=range(5,11), n_branching=10, N=1000, parallel=32, filename='data/data.pkl')
 
 
 
