@@ -3,10 +3,9 @@ import sys
 import numpy as np
 import joblib
 import queue
-from tsp_utility import *
-from ML_feature import *
+import tsp_utility
 
-def tsp(graph, bound=bound_bf, prioritizer=priority_none, model_path=None, depth=3, start_cost=sys.maxsize, init_visited=[0]):
+def tsp(graph, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none, model_path=None, depth=3, start_cost=sys.maxsize, init_visited=[0]):
     model = joblib.load(model_path) if model_path != None else None
     n = len(graph)
     min_cost = start_cost
@@ -62,7 +61,7 @@ def tsp_process(graph, bound, prioritizer, model, depth, start_cost, init_visite
     return min_cost, best_path
     # print(': %s' % (time.time() - tt))
 
-def tsp_mp(graph, n_process, depth_p, bound=bound_bf, prioritizer=priority_none, model_path=None, depth_ml=3, start_cost=sys.maxsize, init_visited=[0]): 
+def tsp_mp(graph, n_process, depth_p, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none, model_path=None, depth_ml=3, start_cost=sys.maxsize, init_visited=[0]): 
     model = joblib.load(model_path) if model_path != None else None
     init_path = queue.Queue()
     min_cost = start_cost
@@ -90,7 +89,7 @@ def tsp_mp(graph, n_process, depth_p, bound=bound_bf, prioritizer=priority_none,
                 if len(init_path.queue) == n_process:
                     one_parallel_round()
             else:
-                branch_priority = priority_none(graph, path, cost, model, depth_ml)
+                branch_priority = tsp_utility.priority_none(graph, path, cost, model, depth_ml)
                 for new_path, new_cost, prob in branch_priority:
                     conut_paths(new_path, new_cost)
         

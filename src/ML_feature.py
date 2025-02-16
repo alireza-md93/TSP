@@ -1,7 +1,5 @@
 import numpy as np
 import tsp_utility
-from data_gen import *
-from tsp import *
 
 def extract_branch_features(graph, visited, current_cost):
     """Extracts features for ML-based branch prioritization."""

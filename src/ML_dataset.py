@@ -3,21 +3,19 @@ import numpy as np
 from tqdm import tqdm
 import sys
 import concurrent.futures
-import multiprocessing.queues
-from tsp_utility import *
-from data_gen import *
-from tsp import *
-from ML_feature import *
+import data_gen
+import tsp
+import ML_feature
 
 def generate_data_with_one_graph(len_graph, n_branching):
     # Simulate branching decisions
-    graph = graph_gen(len_graph)
+    graph = data_gen.graph_gen(len_graph)
     for _ in range(n_branching):  # Simulate 10 branching choices per graph
         visited = list(np.random.choice(len_graph, size=np.random.randint(1, len_graph - 1), replace=False))
         current_cost = np.sum([graph[visited[i]][visited[i+1]] for i in range(len(visited)-1)]) if len(visited) > 1 else 0
-        features = extract_branch_features(graph, visited, current_cost)
-        optimal_tour_cost, path1 = tsp(graph, bound_edge, cost_estimate(graph))
-        best_achievable_cost, path2 = tsp(graph, bound_edge, sys.maxsize, visited)
+        features = ML_feature.extract_branch_features(graph, visited, current_cost)
+        optimal_tour_cost, _, _ = tsp.tsp(graph, bound=tsp.tsp_utility.bound_edge, start_cost=tsp.tsp_utility.cost_estimate(graph))
+        best_achievable_cost, _, _ = tsp.tsp(graph, bound=tsp.tsp_utility.bound_edge, init_visited=visited)
         remaining_cost = best_achievable_cost - current_cost
         # Label: 1 if the branch led to an optimal or near-optimal solution, else 0
         label = 1 if best_achievable_cost <= optimal_tour_cost * 1.2 else 0  # Allow 20% deviation

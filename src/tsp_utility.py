@@ -1,6 +1,6 @@
 import sys
 import heapq
-from ML_feature import *
+import ML_feature
 
 def priority_rf(graph, visited, current_cost, model, depth):
     n = len(graph)
@@ -8,7 +8,7 @@ def priority_rf(graph, visited, current_cost, model, depth):
     for next_city in range(n):
         if next_city not in visited:
             new_cost = current_cost + graph[visited[-1]][next_city]
-            features = extract_branch_features(graph, visited + [next_city], new_cost) if len(visited) < min(n-1, depth) else None
+            features = ML_feature.extract_branch_features(graph, visited + [next_city], new_cost) if len(visited) < min(n-1, depth) else None
             branch_priority.append((visited + [next_city], new_cost, model.predict_proba([features])[0][1] if len(visited) < min(n-1, depth) else -new_cost))
 
     branch_priority.sort(key=lambda x: x[2], reverse=True)
@@ -20,7 +20,7 @@ def priority_nn(graph, visited, current_cost, model, depth):
     for next_city in range(n):
         if next_city not in visited:
             new_cost = current_cost + graph[visited[-1]][next_city]
-            features = extract_branch_features(graph, visited + [next_city], new_cost) if len(visited) < min(n-1, depth) else None
+            features = ML_feature.extract_branch_features(graph, visited + [next_city], new_cost) if len(visited) < min(n-1, depth) else None
             branch_priority.append((visited + [next_city], new_cost, -model.predict([features])[0] if len(visited) < min(n-1, depth) else -new_cost))
 
     branch_priority.sort(key=lambda x: x[2], reverse=True)
