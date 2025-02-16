@@ -7,6 +7,8 @@ import data_gen
 import tsp
 import ML_feature
 
+# Generate data for ML-based branch prioritization
+# takes a graph and generates random partial tours
 def generate_data_with_one_graph(len_graph, n_branching):
     # Simulate branching decisions
     graph = data_gen.graph_gen(len_graph)
@@ -19,21 +21,17 @@ def generate_data_with_one_graph(len_graph, n_branching):
         remaining_cost = best_achievable_cost - current_cost
         # Label: 1 if the branch led to an optimal or near-optimal solution, else 0
         label = 1 if best_achievable_cost <= optimal_tour_cost * 1.2 else 0  # Allow 20% deviation
-        # print(graph)
-        # print(visited)
-        # print(current_cost)
-        # print(features)
-        # print(optimal_tour_cost)
-        # print(best_achievable_cost)
-        # print(path1)
-        # print(path2)
-        # print(label)
 
         return features, label, remaining_cost
-        # X_train.append(features)
-        # Y1_train.append(label)
-        # Y2_train.append(best_achievable_cost - current_cost)
 
+#
+# Generate data for ML-based branch prioritization
+# generates random graphs and calls generate_data_with_one_graph to apply different partial tours
+# len_graph: list of graph sizes
+# n_branching: number of branching decisions per graph
+# N: number of graphs to generate
+# parallel: number of parallel processes
+# filename: file to save the generated data
 def genrate_data_and_save(len_graph, n_branching, N, parallel, filename):
     X_train, Y1_train, Y2_train = [], [], []
     for l in len_graph:

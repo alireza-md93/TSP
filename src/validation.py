@@ -17,6 +17,10 @@ class Timer(object):
             print('[%s]' % self.name,)
         print('Elapsed: %s' % (time.time() - self.tstart))
 
+# Validation of all the configurations implemented in the project
+# num: number of iterations
+# len_graph: number of cities
+# return: 'Success!' if all the configurations are implemented correctly, 'Failure!' otherwise
 def validation(num, len_graph):
     def check_path_equality(p1, p2):
         p3 = p2.copy()
@@ -64,48 +68,3 @@ if __name__ == "__main__":
     validation_result = validation(10, 6)
     print(validation_result)
 
-    graph = data_gen.graph_gen(14)
-    
-    # with Timer('brute_force'):
-    #     best_cost_bf, best_path_bf = tsp.tsp(graph)
-
-    # with Timer('tsp_branch_and_bound'):
-    #     best_cost, best_path = tsp_branch_and_bound(graph)
-
-    # with Timer('bf'):
-    #     best_cost_edge, best_path_edge = tsp.tsp(graph)
-
-    with Timer('edge'):
-        best_cost_edge, best_path_edge, level_freq = tsp.tsp(graph, tsp.tsp_utility.bound_edge)
-    print(best_cost_edge)
-    print(best_path_edge)
-    print(level_freq)
-
-    # with Timer('edge'):
-    #     best_cost_edge, best_path_edge = tsp.tsp(graph,tsp.tsp_utility.bound_edge, tsp.tsp_utility.cost_estimate(graph))
-    # print(best_cost_edge)
-    # print(best_path_edge)
-
-    with Timer('edge multi-threaded'):
-        best_cost_edge_mt, best_path_edge_mt = tsp.tsp_mp(graph,4,4, tsp.tsp_utility.bound_edge)
-    print(best_cost_edge_mt)
-    print(best_path_edge_mt)
-
-    # with Timer('ml'):
-    #     best_cost_edge_mt, best_path_edge_mt, level_freq = tsp_ml(graph,tsp.tsp_utility.bound_edge)
-    # print(best_cost_edge_mt)
-    # print(best_path_edge_mt)
-    # print(level_freq)
-
-    # with Timer('mst'):
-    #     best_cost_mst, best_path_mst = tsp.tsp(graph,tsp.tsp_utility.bound_mst)
-
-
-    # print("Optimal Cost:", best_cost)
-    # print("Optimal Path:", best_path)
-    # best_cost2, best_path2 = tsp.tsp(graph)
-    # print("Optimal Cost:", best_cost2)
-    # print("Optimal Path:", best_path2)
-    # best_cost3, best_path3 = tsp.tsp(graph,tsp.tsp_utility.bound_edge)
-    # print("Optimal Cost:", best_cost3)
-    # print("Optimal Path:", best_path3)

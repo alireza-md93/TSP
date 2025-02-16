@@ -5,6 +5,22 @@ import joblib
 import queue
 import tsp_utility
 
+
+############################################ Single Process ############################################
+#### Arguments ####
+# graph: distance matrix
+# bound: function to calculate the lower bound of the cost (default: tsp_utility.bound_bf)
+# prioritizer: function to prioritize the branch (default: tsp_utility.priority_none)
+# model_path: path to the model file (default: None)
+# depth: The number of cities to consider for ML model (default: 3)
+# start_cost: initial cost of the path (default: sys.maxsize)
+# init_visited: list of initial visited cities (default: [0])
+
+#### Return ####
+# min_cost: minimum cost of the path
+# best_path: the best path
+# level_freq: the frequency of each level in the branch tree
+
 def tsp(graph, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none, model_path=None, depth=3, start_cost=sys.maxsize, init_visited=[0]):
     model = joblib.load(model_path) if model_path != None else None
     n = len(graph)
@@ -33,13 +49,13 @@ def tsp(graph, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none
     branch(init_visited, sum([graph[init_visited[i]][init_visited[i+1]] for i in range(len(init_visited) - 1)]) if len(init_visited) > 1 else 0)
     return min_cost, best_path, level_freq
 
+############################################ Multi Process ############################################
+# each process's task
 def tsp_process(graph, bound, prioritizer, model, depth, start_cost, init_visited):
-    # tt=time.time()
     n = len(graph)
     min_cost = start_cost
     best_path = []
     start = init_visited[0]
-    # lock = threading.Lock()
 
     def branch(visited, current_cost):
         nonlocal min_cost, best_path
@@ -59,8 +75,24 @@ def tsp_process(graph, bound, prioritizer, model, depth, start_cost, init_visite
 
     branch(init_visited, sum([graph[init_visited[i]][init_visited[i+1]] for i in range(len(init_visited) - 1)]) if len(init_visited) > 1 else 0)
     return min_cost, best_path
-    # print(': %s' % (time.time() - tt))
 
+#### Arguments ####
+# graph: distance matrix
+# n_process: number of processes
+# depth_p: The level of the branch tree to consider for each process
+# bound: function to calculate the lower bound of the cost (default: tsp_utility.bound_bf)
+# prioritizer: function to prioritize the branch (default: tsp_utility.priority_none)
+# model_path: path to the model file (default: None)
+# depth: The number of cities to consider for ML model (default: 3)
+# start_cost: initial cost of the path (default: sys.maxsize)
+# init_visited: list of initial visited cities (default: [0])
+
+#### Return ####
+# min_cost: minimum cost of the path
+# best_path: the best path
+# level_freq: the frequency of each level in the branch tree
+
+# main function for multi-process
 def tsp_mp(graph, n_process, depth_p, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none, model_path=None, depth_ml=3, start_cost=sys.maxsize, init_visited=[0]): 
     model = joblib.load(model_path) if model_path != None else None
     init_path = queue.Queue()

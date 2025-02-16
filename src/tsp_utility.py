@@ -2,6 +2,19 @@ import sys
 import heapq
 import ML_feature
 
+############################################## Branch Priority ##############################################
+# graph: adjacency matrix
+# visited: list of visited cities
+# current_cost: current cost of the path
+# model: ML model
+# depth: The number of cities to consider for ML model
+
+# return: list of prioritized tuples (visited, new_cost, probability) where 
+# visited is the list of visited cities for the next branch,
+# new_cost is the cost of the path,
+# and priority is the branch score
+
+# Based on random forest model
 def priority_rf(graph, visited, current_cost, model, depth):
     n = len(graph)
     branch_priority = []
@@ -14,6 +27,7 @@ def priority_rf(graph, visited, current_cost, model, depth):
     branch_priority.sort(key=lambda x: x[2], reverse=True)
     return branch_priority
 
+# Based on neural network model
 def priority_nn(graph, visited, current_cost, model, depth):
     n = len(graph)
     branch_priority = []
@@ -26,6 +40,7 @@ def priority_nn(graph, visited, current_cost, model, depth):
     branch_priority.sort(key=lambda x: x[2], reverse=True)
     return branch_priority
 
+# No priority
 def priority_none(graph, visited, current_cost, model, depth):
     n = len(graph)
     branch_priority = []
@@ -36,11 +51,10 @@ def priority_none(graph, visited, current_cost, model, depth):
 
     return branch_priority
 
-
-def bound_edge(graph, visited, current_cost):
-    n = len(graph)
-    remaining_cost = sum(min(graph[i][j] for j in range(n) if i != j) for i in range(n) if i not in visited)
-    return current_cost + remaining_cost
+############################################## Cost Estimate ##############################################
+# graph: adjacency matrix
+# start: starting city index
+# return: a lower bound for the cost of the full path, which can be used as an initial cost estimate
 def cost_estimate(graph, start=0):
     n = len(graph)
     dist = [sys.maxsize for i in range(n)]
@@ -59,7 +73,9 @@ def cost_estimate(graph, start=0):
 
     return (cost + graph[visited[-1]][start]) * 1.01
 
-        
+# graph: adjacency matrix
+# unvisited: set of unvisited cities
+# return: the cost of the Minimum Spanning Tree (MST) of the unvisited cities
 def prim_mst(graph, unvisited):
     """ Computes the Minimum Spanning Tree (MST) using Prim’s Algorithm. """
     if len(unvisited) < 2:
@@ -83,6 +99,20 @@ def prim_mst(graph, unvisited):
 
     return min_cost
 
+############################################## Lower Bound ##############################################
+# graph: adjacency matrix
+# visited: list of visited cities
+# current_cost: current cost of the path
+
+# return: a lower bound for the cost of the full path based on the current partial path
+
+# sum of the minimum edge costs for each unvisited city
+def bound_edge(graph, visited, current_cost):
+    n = len(graph)
+    remaining_cost = sum(min(graph[i][j] for j in range(n) if i != j) for i in range(n) if i not in visited)
+    return current_cost + remaining_cost
+
+# MST heuristic
 def bound_mst(graph, visited, current_cost):
     """ Computes a lower bound using MST + Minimum Edge Heuristic """
     n = len(graph)
@@ -104,5 +134,6 @@ def bound_mst(graph, visited, current_cost):
 
     return current_cost + 0.5 * (mst_cost + min_two_sum)
 
+# brute force
 def bound_bf(a,b,c):
     return True

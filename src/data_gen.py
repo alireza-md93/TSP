@@ -1,6 +1,8 @@
 import random
 import numpy as np
 
+#gnerate distace matrix for n_city cities
+#distances are euclidean distances between random points in 2D plane
 def graph_gen(n_city):
 
     cityLoc = []
@@ -13,17 +15,7 @@ def graph_gen(n_city):
     #     cityLoc[i][0] = cityLoc[i][0] + random.random()/0.5
     #     cityLoc[i][1] = cityLoc[i][1] + random.random()/0.5
     
+    # calculate euclidean distances
     graph = np.array([[np.linalg.norm(np.array(cityLoc[i]) - np.array(cityLoc[j])) for j in range(n_city)] for i in range(n_city)])
-    # graph = np.round(graph)
-    # print(cityLoc)
-    # print(graph)
-
-    # Example Graph (Adjacency Matrix)
-    # graph = [
-    #     [0, 29, 20, 21],
-    #     [29, 0, 15, 17],
-    #     [20, 15, 0, 28],
-    #     [21, 17, 28, 0]
-    # ]
 
     return graph
