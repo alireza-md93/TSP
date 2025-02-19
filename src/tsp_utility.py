@@ -55,23 +55,24 @@ def priority_none(graph, visited, current_cost, model, depth):
 # graph: adjacency matrix
 # start: starting city index
 # return: a lower bound for the cost of the full path, which can be used as an initial cost estimate
-def cost_estimate(graph, start=0):
+def cost_estimate(graph):
     n = len(graph)
-    dist = [sys.maxsize for i in range(n)]
-    visited = [start]
-    unvisited = [i for i in range(n) if i not in visited]
-    cost = 0
-
-    while len(unvisited) > 0:
-        for neighbour in unvisited:
-            dist[neighbour] = graph[visited[-1]][neighbour]
-        min_ind = dist.index(min(dist))
-        cost = cost + dist[min_ind]
-        visited.append(min_ind)
-        unvisited.remove(min_ind)
-        dist[min_ind] = sys.maxsize
-
-    return (cost + graph[visited[-1]][start]) * 1.01
+    def one_round(visited):
+        cost = 0
+        unvisited = [i for i in range(n) if i not in visited]
+        dist = [sys.maxsize for i in range(n)]
+        while len(unvisited) > 0:
+            for neighbour in unvisited:
+                dist[neighbour] = graph[visited[-1]][neighbour]
+            min_ind = dist.index(min(dist))
+            cost = cost + dist[min_ind]
+            visited.append(min_ind)
+            unvisited.remove(min_ind)
+            dist[min_ind] = sys.maxsize
+        return (cost + graph[visited[-1]][visited[0]]) * 1.01
+    
+    costs = [one_round([i]) for i in range(n)]
+    return min(costs)
 
 # graph: adjacency matrix
 # unvisited: set of unvisited cities

@@ -1,21 +1,7 @@
-import time
 import sys
 from tqdm import tqdm
 import data_gen
 import tsp
-
-class Timer(object):
-    def __init__(self, name=None):
-        self.name = name
-
-    def __enter__(self):
-        self.tstart = time.time()
-
-    def __exit__(self, type, value, traceback):
-        print()
-        if self.name:
-            print('[%s]' % self.name,)
-        print('Elapsed: %s' % (time.time() - self.tstart))
 
 # Validation of all the configurations implemented in the project
 # num: number of iterations

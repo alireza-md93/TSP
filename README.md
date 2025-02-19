@@ -75,7 +75,6 @@ The solver provides both single-process and multi-process implementations, with 
 #### Returns:
 - `min_cost`: Minimum path cost.
 - `best_path`: Optimal path.
-- `level_freq`: Frequency of each branching level.
 
 ## Validation
 To validate the project across all configurations, run:
@@ -83,6 +82,33 @@ To validate the project across all configurations, run:
 python src/validation.py
 ```
 This script runs all solvers with random graphs of size 6 for 10 iterations.
+
+## Experiments
+
+To run custom experiments, modify the `result.py` file in the specified section. The function `do_experiment` should be called as many times as needed. Results will be stored in `results.csv` and appended to existing results if the file already exists.
+
+Each experiment is assigned a unique ID:
+
+If `results.csv` does not exist, the first experiment starts with ID 0.
+If results.csv exists, the ID continues from the last recorded experiment.
+
+### Experiment Handler (`do_experiment`)
+#### Arguments:
+- `graph` : Adjacency matrix of the graph.
+- `bound` : Method to calculate the lower bound of cost. Options:
+  - `'brute force'`
+  - `'edge'`
+  - `'MST'`
+- `prioritizer` : Method to prioritize branches. Options:
+  - `'none'`
+  - `'random forest'`
+  - `'neural network'`
+- `depth_ml` : Number of cities considered for the ML model.
+- `depth_p` : Branch tree depth allocated per process.
+- `n_p` : Number of processes (1 for a single-process run).
+- `start_cost` : Initial cost estimate. Options:
+  - `'inf'`
+  - `'estimate'`
 
 ## Conclusion
 This project demonstrates an optimized approach to solving TSP using parallel computing and machine learning models. Further improvements can be made by experimenting with different ML architectures, hyperparameters, and heuristics.

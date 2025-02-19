@@ -90,7 +90,6 @@ def tsp_process(graph, bound, prioritizer, model, depth, start_cost, init_visite
 #### Return ####
 # min_cost: minimum cost of the path
 # best_path: the best path
-# level_freq: the frequency of each level in the branch tree
 
 # main function for multi-process
 def tsp_mp(graph, n_process, depth_p, bound=tsp_utility.bound_bf, prioritizer=tsp_utility.priority_none, model_path=None, depth_ml=3, start_cost=sys.maxsize, init_visited=[0]): 
